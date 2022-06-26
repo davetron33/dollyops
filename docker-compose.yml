@@ -1,0 +1,19 @@
+services:
+  redis:
+    image: redis
+    volumes:
+      - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass CHANGE_ME_TO_MATCH_REDIS_DOT_CONF
+  dollyops:
+    image: dollyops
+    build: .
+    ports:
+      - 127.0.0.1:9001:9001/tcp
+    links:
+      - redis
+    depends_on:
+      - redis
+    environment:
+      - REDIS_PASS = CHANGE_ME_TO_MATCH_REDIS_DOT_CONF
